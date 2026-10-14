@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://melikegumus1694-lgtm.github.io/gumus-ai-studio/sitemap.xml
