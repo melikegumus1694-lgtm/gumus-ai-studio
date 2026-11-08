@@ -1,0 +1,31 @@
+name: Assemble coastal bridal portfolio video
+on:
+  push:
+    branches:
+      - portfolio-coastal-bridal-2026-11-08
+    paths:
+      - 'assets/coastal-bridal-parts/**'
+      - '.github/workflows/assemble-coastal-bridal.yml'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct and verify video
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -d assets/coastal-bridal-parts ]; then
+            echo "Already assembled"
+            exit 0
+          fi
+          cat assets/coastal-bridal-parts/part-*.bin > assets/coastal-bridal-film.mp4
+          echo '5cad9980f9a736b904ad3ed6e321f12eeefe9762998c626099ca63a44adfed87  assets/coastal-bridal-film.mp4' | sha256sum -c
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/coastal-bridal-film.mp4
+          git rm -rq assets/coastal-bridal-parts
+          git commit -m "Reconstruct and publish complete coastal bridal film"
+          git push origin HEAD:portfolio-coastal-bridal-2026-11-08
